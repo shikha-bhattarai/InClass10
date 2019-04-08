@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">InClass10</string>
+    <string name="editTextEmail">Email</string>
+    <string name="editTextPassword">Password</string>
+    <string name="buttonLogin">Login</string>
+    <string name="buttonSignup">Sign Up</string>
+    <string name="cancel">Cancel</string>
 </resources>
