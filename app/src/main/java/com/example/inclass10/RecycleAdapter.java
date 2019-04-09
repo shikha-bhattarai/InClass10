@@ -1,6 +1,8 @@
 package com.example.inclass10;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,14 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
                 view.getContext().startActivity(intent);
             }
         });
+
+        viewHolder.deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+                String string = sharedPref.getString("token", "default_value");
+            }
+        });
     }
 
     @Override
@@ -51,6 +61,7 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView deleteIcon;
         TextView displayMessage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
