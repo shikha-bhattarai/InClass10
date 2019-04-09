@@ -70,22 +70,27 @@ public class AddNote extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        try {
-                            JSONObject noteRoot = new JSONObject(response.body().string());
-                            JSONObject noteNote = noteRoot.getJSONObject("note");
-                            String messageId = noteNote.getString("_id");
-                            String message = noteNote.getString("text");
-                            String userID = noteNote.getString("userId");
-                            Intent intent = getIntent();
-                            intent.putExtra(Notes.MESSAGE_KEY, message);
-                            intent.putExtra(Notes.MESSAGEID_KEY, messageId);
-                            intent.putExtra(Notes.USERID_KEY, userID);
-                            setResult(Activity.RESULT_OK, intent);
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (response.isSuccessful()){
+                            try {
+                                JSONObject noteRoot = new JSONObject(response.body().string());
+                                JSONObject noteNote = noteRoot.getJSONObject("note");
+                                String messageId = noteNote.getString("_id");
+                                String message = noteNote.getString("text");
+                                String userID = noteNote.getString("userId");
+                                Intent intent = getIntent();
+                                intent.putExtra(Notes.MESSAGE_KEY, message);
+                                intent.putExtra(Notes.MESSAGEID_KEY, messageId);
+                                intent.putExtra(Notes.USERID_KEY, userID);
+                                setResult(Activity.RESULT_OK, intent);
+                                finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                    }else{
+                            Toast.makeText(AddNote.this, "Unable to add note", Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                    }
+                }
                 });
             }
         });

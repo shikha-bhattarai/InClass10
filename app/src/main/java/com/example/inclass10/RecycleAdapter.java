@@ -1,5 +1,7 @@
 package com.example.inclass10;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,7 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
     public RecycleAdapter(ArrayList<NoteObject>arrayList) {
         this.arrayList = arrayList;
     }
+    static final String DISPLAY_NOTE_KEY = "display_key";
 
     @NonNull
     @Override
@@ -31,7 +34,15 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.displayMessage.setText(arrayList.get(i).getMessage());
-        Log.d("tototo",arrayList.get(i).getMessage() );
+
+        viewHolder.displayMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), DisplayNote.class );
+                intent.putExtra(DISPLAY_NOTE_KEY, arrayList.get(i).getMessageID());
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -44,6 +55,7 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             displayMessage = itemView.findViewById(R.id.textViewNote);
+
 
         }
     }

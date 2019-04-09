@@ -101,7 +101,6 @@ public class Notes extends AppCompatActivity {
     }
 
     public void getAllNotes(){
-        Log.d("hdddddddii", "hl333333333333333333333333333333333333333333lo");
         SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
         String token = sharedPref.getString("token", "default_value");
         String url = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/getall";
