@@ -108,7 +108,7 @@ public class Signup extends AppCompatActivity {
                             JSONObject root = new JSONObject(j);
                             if(root.has("token")){
                                 token = root.getString("token");
-                                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("token", token);
                                 editor.commit();
