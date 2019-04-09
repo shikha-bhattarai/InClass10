@@ -1,6 +1,8 @@
 package com.example.inclass10;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -106,6 +108,10 @@ public class Signup extends AppCompatActivity {
                             JSONObject root = new JSONObject(j);
                             if(root.has("token")){
                                 token = root.getString("token");
+                                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("token", token);
+                                editor.commit();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
