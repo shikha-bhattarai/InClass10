@@ -68,19 +68,15 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
             @Override
             public void onClick(View view) {
                 String messageId = arrayList.get(i).getMessageID();
-//                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPref.edit();
                 final String DELETE_NOTE_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/delete?msgId="+messageId;
+                SharedPreferences sharedPref = view.getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
+                String token = sharedPref.getString("token", "default_value");
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(DELETE_NOTE_URL)
-                        .header("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYWJlMjAwZDQ2ZWQ3MGNmNDA5NzZiMSIsImlhdCI6MTU1NDgzMjUzNSwiZXhwIjoxNTU0OTE4OTM1fQ.GV7lcjkMMP6vuGEjhIWC3Br0CoHbgZh6IWsvMslC6uI")
+                        .header("x-access-token", token)
                         .header("Content-Type","application/x-www-form-urlencoded")
                         .build();
-
-                Log.d("demo", DELETE_NOTE_URL);
-                Log.d("demo2", request.toString());
-
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
