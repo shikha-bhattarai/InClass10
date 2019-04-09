@@ -18,7 +18,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxLength="100"/>
 
     <ImageButton
         android:id="@+id/imageButton"
