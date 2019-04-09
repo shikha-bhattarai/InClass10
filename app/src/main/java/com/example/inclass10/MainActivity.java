@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .post(formBody)
                         .build();
-                Log.d("demo",formBody.toString());
 
                 Call call = client.newCall(request);
                 call.enqueue(new Callback() {
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.d("demo2222",response.toString());
-                        String jsonData = response.body().string();
                         if (response.isSuccessful()){
-                            Log.d("demo","sucess");
+                            Intent intent = new Intent(MainActivity.this, Notes.class);
+                            startActivity(intent);
+                            finish();
                         }
                     }
                 });
