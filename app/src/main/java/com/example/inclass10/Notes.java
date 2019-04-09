@@ -73,7 +73,7 @@ public class Notes extends AppCompatActivity {
             }
         });
 
-     /*  logOff.setOnClickListener(new View.OnClickListener() {
+       logOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences preferences =getSharedPreferences("token",Context.MODE_PRIVATE);
@@ -84,7 +84,7 @@ public class Notes extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });*/
+        });
     }
 
 

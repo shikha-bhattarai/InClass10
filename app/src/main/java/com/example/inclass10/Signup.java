@@ -111,7 +111,7 @@ public class Signup extends AppCompatActivity {
                                 SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("token", token);
-                                editor.commit();
+                                editor.apply();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

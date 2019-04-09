@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -69,9 +72,25 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()){
-                            Intent intent = new Intent(MainActivity.this, Notes.class);
-                            startActivity(intent);
-                            finish();
+                            String token;
+                            try {
+                                JSONObject root = new JSONObject(response.body().string());
+                                if(root.has("token")){
+                                    token = root.getString("token");
+                                    if(!token.equals(null)) {
+                                        SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("token",   token);
+                                        editor.apply();
+                                        Intent intent = new Intent(MainActivity.this, Notes.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
                 });
@@ -84,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-    /*   SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+       SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
         String userToken = sharedPref.getString("token", "default_value");
         if(!userToken.equals("default_value")){
             Intent intent = new Intent(MainActivity.this, Notes.class);
             startActivity(intent);
             finish();
-        }*/
+        }
     }
 }
