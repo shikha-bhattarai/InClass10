@@ -30,7 +30,7 @@ import okhttp3.Response;
 
 public class Signup extends AppCompatActivity {
     EditText firstName, lastName, email, password, password02;
-    public  final String SIGN_UP_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/register";
+    public final String SIGN_UP_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/register";
     Button signup;
     String token;
 
@@ -106,7 +106,7 @@ public class Signup extends AppCompatActivity {
                         String j = response.body().string();
                         try {
                             JSONObject root = new JSONObject(j);
-                            if(root.has("token")){
+                            if (root.has("token")) {
                                 token = root.getString("token");
                                 SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -124,8 +124,6 @@ public class Signup extends AppCompatActivity {
                 });
             }
         });
-
-
 
 
     }

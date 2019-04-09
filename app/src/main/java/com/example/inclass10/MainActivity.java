@@ -1,3 +1,8 @@
+/*
+Teena Xiong & Shikha Bhattarai
+In Class 10
+ */
+
 package com.example.inclass10;
 
 import android.content.Context;
@@ -28,8 +33,9 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     Button signUp;
     Button login;
-    EditText email,password;
-    public  final String LOGIN_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/login";
+    EditText email, password;
+    public final String LOGIN_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/login";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
                 RequestBody formBody = new FormBody.Builder()
                         .add("email", email.getText().toString().trim())
-                        .add("password",password.getText().toString().trim())
+                        .add("password", password.getText().toString().trim())
                         .build();
 
                 Request request = new Request.Builder()
@@ -67,21 +73,21 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                            Toast.makeText(MainActivity.this, "Can Not Log In", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Can Not Log In", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             String token;
                             try {
                                 JSONObject root = new JSONObject(response.body().string());
-                                if(root.has("token")){
+                                if (root.has("token")) {
                                     token = root.getString("token");
-                                    if(!token.equals(null)) {
+                                    if (!token.equals(null)) {
                                         SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPref.edit();
-                                        editor.putString("token",   token);
+                                        editor.putString("token", token);
                                         editor.apply();
                                         Intent intent = new Intent(MainActivity.this, Notes.class);
                                         startActivity(intent);
@@ -104,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
         String userToken = sharedPref.getString("token", "default_value");
-        if(!userToken.equals("default_value")){
+        if (!userToken.equals("default_value")) {
             Intent intent = new Intent(MainActivity.this, Notes.class);
             startActivity(intent);
             finish();

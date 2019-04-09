@@ -15,13 +15,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHolder> {
+public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
 
-    ArrayList<NoteObject>arrayList;
-    public RecycleAdapter(ArrayList<NoteObject>arrayList) {
+    ArrayList<NoteObject> arrayList;
+
+    public RecycleAdapter(ArrayList<NoteObject> arrayList) {
         this.arrayList = arrayList;
     }
+
     static final String DISPLAY_NOTE_KEY = "display_key";
 
     @NonNull
@@ -40,7 +42,7 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
         viewHolder.displayMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), DisplayNote.class );
+                Intent intent = new Intent(view.getContext(), DisplayNote.class);
                 intent.putExtra(DISPLAY_NOTE_KEY, arrayList.get(i).getMessageID());
                 view.getContext().startActivity(intent);
             }
@@ -49,7 +51,7 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
         viewHolder.deleteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = view.getContext().getSharedPreferences("token", Context.MODE_PRIVATE);
                 String string = sharedPref.getString("token", "default_value");
             }
         });
@@ -60,9 +62,10 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
         return arrayList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView deleteIcon;
         TextView displayMessage;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             displayMessage = itemView.findViewById(R.id.textViewNote);

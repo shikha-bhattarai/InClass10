@@ -46,7 +46,7 @@ public class DisplayNote extends AppCompatActivity {
         close = findViewById(R.id.buttonDisplayClose);
         jsonMessage = "";
 
-        if(getIntent() != null && getIntent().getExtras() != null){
+        if (getIntent() != null && getIntent().getExtras() != null) {
             message = getIntent().getExtras().getString(RecycleAdapter.DISPLAY_NOTE_KEY);
         }
 
@@ -71,24 +71,24 @@ public class DisplayNote extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(response.isSuccessful()){
-                try {
-                    JSONObject rootMessage = new JSONObject(response.body().string());
-                    JSONObject noteObject = rootMessage.getJSONObject("note");
-                    if(noteObject.has("text")){
-                        jsonMessage = noteObject.getString("text");
-                        DisplayNote.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                displaySingleMessage.setText(jsonMessage);
-                            }
-                        });
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject rootMessage = new JSONObject(response.body().string());
+                        JSONObject noteObject = rootMessage.getJSONObject("note");
+                        if (noteObject.has("text")) {
+                            jsonMessage = noteObject.getString("text");
+                            DisplayNote.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    displaySingleMessage.setText(jsonMessage);
+                                }
+                            });
 
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }else{
+                } else {
                     Toast.makeText(DisplayNote.this, "Unable to display note", Toast.LENGTH_SHORT);
                     return;
                 }

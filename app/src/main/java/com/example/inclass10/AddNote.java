@@ -46,7 +46,7 @@ public class AddNote extends AppCompatActivity {
         findViewById(R.id.buttonPostIt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editTextNote.getText().toString().equals("")){
+                if (editTextNote.getText().toString().equals("")) {
                     editTextNote.setError("Please enter a note");
                     return;
                 }
@@ -71,7 +71,7 @@ public class AddNote extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             try {
                                 JSONObject noteRoot = new JSONObject(response.body().string());
                                 JSONObject noteNote = noteRoot.getJSONObject("note");
@@ -87,16 +87,16 @@ public class AddNote extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                    }else{
+                        } else {
                             Toast.makeText(AddNote.this, "Unable to add note", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                }
+                    }
                 });
             }
         });
 
 
     }
-    }
+}
 
