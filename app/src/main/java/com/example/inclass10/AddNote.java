@@ -38,6 +38,7 @@ public class AddNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+        setTitle("Add Note");
 
         editTextNote = findViewById(R.id.editTextNote);
         editTextNote.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH)});

@@ -52,5 +52,6 @@
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonLogOff"
         app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp"/>
 </android.support.constraint.ConstraintLayout>

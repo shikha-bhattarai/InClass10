@@ -40,6 +40,7 @@ public class DisplayNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_note);
+        setTitle("Your Note");
 
         displaySingleMessage = findViewById(R.id.textViewDisplaySingleMessage);
         close = findViewById(R.id.buttonDisplayClose);
