@@ -32,6 +32,7 @@ public class Signup extends AppCompatActivity {
 
         Request request = new Request.Builder()
                 .url(SIGN_UP_URL)
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
