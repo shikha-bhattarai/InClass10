@@ -51,6 +51,8 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+
         viewHolder.displayMessage.setText(arrayList.get(i).getMessage());
 
         viewHolder.displayMessage.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +68,8 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
             @Override
             public void onClick(View view) {
                 String messageId = arrayList.get(i).getMessageID();
+//                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPref.edit();
                 final String DELETE_NOTE_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/delete?msgId="+messageId;
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
@@ -88,6 +92,9 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
 
                     }
                 });
+
+                arrayList.remove(i);
+                notifyItemRemoved(i);
             }
         });
     }
