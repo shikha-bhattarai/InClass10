@@ -1,6 +1,8 @@
 package com.example.inclass10;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
 
                 RequestBody formBody = new FormBody.Builder()
-                        .add("email", email.getText().toString())
-                        .add("password",password.getText().toString())
+                        .add("email", email.getText().toString().trim())
+                        .add("password",password.getText().toString().trim())
                         .build();
 
                 Request request = new Request.Builder()
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-
+                            Toast.makeText(MainActivity.this, "Can Not Log In", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -77,5 +79,17 @@ public class MainActivity extends AppCompatActivity {
             }
 //            }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    /*   SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+        String userToken = sharedPref.getString("token", "default_value");
+        if(!userToken.equals("default_value")){
+            Intent intent = new Intent(MainActivity.this, Notes.class);
+            startActivity(intent);
+            finish();
+        }*/
     }
 }

@@ -6,4 +6,5 @@
     <string name="buttonSignup">Sign Up</string>
     <string name="cancel">Cancel</string>
     <string name="buttonAddNote">Add Note</string>
+    <string name="buttonPostIt">Post</string>
 </resources>
