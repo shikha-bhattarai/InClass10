@@ -1,6 +1,7 @@
 package com.example.inclass10;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,31 +44,39 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (email.equals("") || password.equals("")) {
-                    Toast.makeText(MainActivity.this, "Please enter a valid email and password", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = new OkHttpClient();
 
-                    Request request = new Request.Builder()
-                            .url(LOGIN_URL)
-                            .header("Content-Type", "application/x-www-form-urlencoded")
-                            .build();
+                RequestBody formBody = new FormBody.Builder()
+                        .add("email", email.getText().toString())
+                        .add("password",password.getText().toString())
+                        .build();
 
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
+                Request request = new Request.Builder()
+                        .url(LOGIN_URL)
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .post(formBody)
+                        .build();
+                Log.d("demo",formBody.toString());
 
+                Call call = client.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Log.d("demo",response.toString());
+                        String jsonData = response.body().string();
+                        if (response.isSuccessful()){
+                            Log.d("demo","sucess");
                         }
+                    }
+                });
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            Log.d("Demo", response.body().toString());
-                        }
-                    });
-
-                }
             }
+//            }
         });
     }
 }
