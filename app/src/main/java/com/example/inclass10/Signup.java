@@ -1,13 +1,21 @@
 package com.example.inclass10;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,6 +30,7 @@ public class Signup extends AppCompatActivity {
     EditText firstName, lastName, email, password, password02;
     public  final String SIGN_UP_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/register";
     Button signup;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +45,42 @@ public class Signup extends AppCompatActivity {
         signup = findViewById(R.id.buttonSignup);
 
 
-
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final String firstNameString = firstName.getText().toString().trim();
+                final String lastNameString = lastName.getText().toString().trim();
+                final String emailString = email.getText().toString().trim();
+                final String passwordString = password.getText().toString().trim();
+                String passwordString02 = password02.getText().toString().trim();
+
+                if (firstNameString.equals("")) {
+                    firstName.setError("Please enter a first name");
+                    return;
+                }
+
+                if (lastNameString.equals("")) {
+                    lastName.setError("Please enter a last name");
+                    return;
+                }
+                if (emailString.equals("")) {
+                    email.setError("Please enter an email");
+                    return;
+                }
+                if (passwordString.length() < 6) {
+                    password.setError("Minimun password length is 6");
+                    return;
+                }
+                if (!passwordString.equals(passwordString02)) {
+                    Toast.makeText(Signup.this, "Password does not match", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
+                    email.setError("Please enter a valid email");
+                    return;
+                }
+
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()
                         .add("name", firstName.getText().toString())
@@ -56,13 +96,24 @@ public class Signup extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("Demo1110", e.toString());
+                        Toast.makeText(Signup.this, "Unable to sign up.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.d("Demo00", response.body().string());
-                        Log.d("Demo00", "helo");
+                        String j = response.body().string();
+                        try {
+                            JSONObject root = new JSONObject(j);
+                            if(root.has("token")){
+                                token = root.getString("token");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Intent intent = new Intent(Signup.this, Notes.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
             }
