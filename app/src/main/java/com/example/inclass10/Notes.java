@@ -65,12 +65,18 @@ public class Notes extends AppCompatActivity {
         arrayList = new ArrayList<>();
         getAllNotes();
 
+
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RecycleAdapter(arrayList);
         recyclerView.setAdapter(adapter);
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }else{
 
+        }
         getUserName();
+
 
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,4 +176,6 @@ public class Notes extends AppCompatActivity {
             }
         });
     }
+
+
 }

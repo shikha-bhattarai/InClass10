@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Toast.makeText(MainActivity.this, "Can Not Log In", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
 
                     @Override

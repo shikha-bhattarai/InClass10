@@ -85,15 +85,16 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-
                     }
                 });
-
                 arrayList.remove(i);
                 notifyItemRemoved(i);
             }
         });
+
     }
+
+
 
     @Override
     public int getItemCount() {

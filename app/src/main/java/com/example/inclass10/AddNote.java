@@ -66,7 +66,7 @@ public class AddNote extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Toast.makeText(AddNote.this, "Unable to add note.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -87,9 +87,6 @@ public class AddNote extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-                            Toast.makeText(AddNote.this, "Unable to add note", Toast.LENGTH_SHORT).show();
-                            return;
                         }
                     }
                 });

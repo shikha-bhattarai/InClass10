@@ -98,7 +98,7 @@ public class Signup extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Toast.makeText(Signup.this, "Unable to sign up.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
 
                     @Override

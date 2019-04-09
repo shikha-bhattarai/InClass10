@@ -66,7 +66,7 @@ public class DisplayNote extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(DisplayNote.this, "Unable to display message.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
 
             @Override
@@ -83,14 +83,10 @@ public class DisplayNote extends AppCompatActivity {
                                     displaySingleMessage.setText(jsonMessage);
                                 }
                             });
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    Toast.makeText(DisplayNote.this, "Unable to display note", Toast.LENGTH_SHORT);
-                    return;
                 }
             }
         });
