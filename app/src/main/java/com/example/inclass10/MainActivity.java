@@ -8,10 +8,8 @@ package com.example.inclass10;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,10 +29,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    Button signUp;
-    Button login;
-    EditText email, password;
-    public final String LOGIN_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/login";
+    private Button signUp;
+    private Button login;
+    private EditText email;
+    private EditText password;
+    private boolean auth44;
+    private final String LOGIN_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +45,18 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.buttonLogin);
         email = findViewById(R.id.editTextEmail);
         password = findViewById(R.id.editTextPassword);
+        auth44 = true;
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Signup.class));
-                finish();
             }
         });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 OkHttpClient client = new OkHttpClient();
 
                 RequestBody formBody = new FormBody.Builder()
@@ -73,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, "Unable to log in", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            });
                         e.printStackTrace();
                     }
 
@@ -82,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             String token;
                             try {
                                 JSONObject root = new JSONObject(response.body().string());
-                                if (root.has("token")) {
                                     token = root.getString("token");
-                                    if (!token.equals(null)) {
                                         SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPref.edit();
                                         editor.putString("token", token);
@@ -92,18 +98,20 @@ public class MainActivity extends AppCompatActivity {
                                         Intent intent = new Intent(MainActivity.this, Notes.class);
                                         startActivity(intent);
                                         finish();
-                                    }
-                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
+                        }else{
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                        Toast.makeText(MainActivity.this, "Unable to log in", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 });
-
             }
-//            }
         });
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,10 +26,15 @@ import okhttp3.Response;
 
 
 public class Signup extends AppCompatActivity {
-    EditText firstName, lastName, email, password, password02;
-    public final String SIGN_UP_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/register";
-    Button signup;
-    String token;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText email;
+    private EditText password;
+    private EditText password02;
+    private final String SIGN_UP_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/register";
+    private Button signup;
+    private Button cancel;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,14 @@ public class Signup extends AppCompatActivity {
         password = findViewById(R.id.editTextPassword);
         password02 = findViewById(R.id.editTextPasswordCom);
         signup = findViewById(R.id.buttonSignup);
+        cancel = findViewById(R.id.cancelButton);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
         signup.setOnClickListener(new View.OnClickListener() {
@@ -98,28 +108,43 @@ public class Signup extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                        Signup.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(Signup.this, "Unable to display note", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        String j = response.body().string();
-                        try {
-                            JSONObject root = new JSONObject(j);
-                            if (root.has("token")) {
-                                token = root.getString("token");
-                                SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString("token", token);
-                                editor.apply();
+                        if (response.isSuccessful()) {
+                            String j = response.body().string();
+                            try {
+                                JSONObject root = new JSONObject(j);
+                                if (root.has("token")) {
+                                    token = root.getString("token");
+                                    SharedPreferences sharedPref = getSharedPreferences("token", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("token", token);
+                                    editor.apply();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
-                        Intent intent = new Intent(Signup.this, Notes.class);
-                        startActivity(intent);
-                        finish();
+                            Intent intent = new Intent(Signup.this, Notes.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Signup.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(Signup.this, "Unable to display note", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                 });
             }

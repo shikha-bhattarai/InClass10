@@ -48,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonLogOff"
         app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintStart_toStartOf="parent"

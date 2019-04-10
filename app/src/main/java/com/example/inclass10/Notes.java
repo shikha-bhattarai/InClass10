@@ -28,26 +28,26 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Notes extends AppCompatActivity {
+public class Notes extends AppCompatActivity implements RecycleAdapter.UpdateAdapter {
 
 
-    TextView userName;
-    FloatingActionButton logOff;
-    RecyclerView recyclerView;
-    Button addNote;
-    RecyclerView.Adapter adapter;
-    RecyclerView.LayoutManager layoutManager;
-    ArrayList<NoteObject> arrayList;
-    static final int NOTE_KEY = 100;
+    private TextView userName;
+    private FloatingActionButton logOff;
+    private RecyclerView recyclerView;
+    private Button addNote;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<NoteObject> arrayList;
+    private static final int NOTE_KEY = 100;
     static final String MESSAGE_KEY = "message";
     static final String MESSAGEID_KEY = "messageID";
     static final String ARRAY_KEY = "arraykey";
     public static final String USERID_KEY = "userId" ;
-    SharedPreferences sharedPref;
-    String userNameString;
-    String token;
-    static final String GETALLNOTES_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/getall";
-    static final String GET_USER_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/me";
+    private SharedPreferences sharedPref;
+    private String userNameString;
+    private String token;
+    private static final String GETALLNOTES_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/getall";
+    private static final String GET_USER_URL = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/auth/me";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class Notes extends AppCompatActivity {
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecycleAdapter(arrayList);
+        adapter = new RecycleAdapter(arrayList, Notes.this);
         recyclerView.setAdapter(adapter);
         if(adapter!=null){
             adapter.notifyDataSetChanged();
@@ -112,7 +112,7 @@ public class Notes extends AppCompatActivity {
         }
     }
 
-    public void getAllNotes(){
+    private void getAllNotes(){
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -123,32 +123,45 @@ public class Notes extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(Notes.this, "No Notes.", Toast.LENGTH_SHORT).show();
+                Notes.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(Notes.this, "No Notes", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String message, messageID, userID;
-                try {
-                    JSONObject root = new JSONObject(response.body().string());
-                    JSONArray jsonArray = root.getJSONArray("notes");
-                    arrayList.clear();
-                    for(int x = 0; x<jsonArray.length(); x++){
-                        JSONObject resultObject = jsonArray.getJSONObject(x);
-                        messageID = resultObject.getString("_id");
-                        message = resultObject.getString("text");
-                        userID = resultObject.getString("userId");
-                        arrayList.add(new NoteObject(message, messageID, userID));
+                if(response.isSuccessful()) {
+                    String message, messageID, userID;
+                    try {
+                        JSONObject root = new JSONObject(response.body().string());
+                        JSONArray jsonArray = root.getJSONArray("notes");
+                        arrayList.clear();
+                        for (int x = 0; x < jsonArray.length(); x++) {
+                            JSONObject resultObject = jsonArray.getJSONObject(x);
+                            messageID = resultObject.getString("_id");
+                            message = resultObject.getString("text");
+                            userID = resultObject.getString("userId");
+                            arrayList.add(new NoteObject(message, messageID, userID));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }else{
+                    Notes.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Notes.this, "No Notes to Load. Add some notes", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-
             }
         });
     }
 
-    public void getUserName(){
+    private void getUserName(){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(GET_USER_URL)
@@ -158,24 +171,53 @@ public class Notes extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(Notes.this, "No User", Toast.LENGTH_SHORT).show();
+
+                Notes.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(Notes.this, "No User", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String message, messageID, userID;
-                try {
-                    JSONObject root = new JSONObject(response.body().string());
-                    userNameString = root.getString("name");
-                    userName.setText(userNameString);
+                if(response.isSuccessful()) {
+                    try {
+                        JSONObject root = new JSONObject(response.body().string());
+                        userNameString = root.getString("name");
+                        Notes.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userName.setText(userNameString);
+                            }
+                        });
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Notes.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Notes.this, "No User", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
             }
         });
     }
 
+    @Override
+    public void updateAdapter(int index) {
+        Notes.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                arrayList.remove(index);
+                adapter.notifyItemRemoved(index);
+            }
+        });
 
+    }
 }

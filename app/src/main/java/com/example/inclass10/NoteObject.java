@@ -1,10 +1,9 @@
 package com.example.inclass10;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class NoteObject{
-    String message, messageID, userID;
+class NoteObject{
+    private String message;
+    private String messageID;
+    private String userID;
 
     public NoteObject(String message, String messageID, String userID) {
         this.message = message;

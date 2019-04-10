@@ -3,21 +3,13 @@ package com.example.inclass10;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,9 +24,11 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
 
 
 
-    ArrayList<NoteObject> arrayList;
+    private ArrayList<NoteObject> arrayList;
+    private UpdateAdapter updateAdapter;
 
-    public RecycleAdapter(ArrayList<NoteObject> arrayList) {
+    public RecycleAdapter(ArrayList<NoteObject> arrayList, UpdateAdapter updateAdapter) {
+        this.updateAdapter = updateAdapter;
         this.arrayList = arrayList;
     }
 
@@ -84,17 +78,16 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(Call call, Response response) {
+                        if(response.isSuccessful()){
+                            updateAdapter.updateAdapter(i);
+                        }
                     }
                 });
-                arrayList.remove(i);
-                notifyItemRemoved(i);
             }
         });
 
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -104,10 +97,14 @@ public class RecycleAdapter extends RecyclerView.Adapter <RecycleAdapter.ViewHol
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView deleteIcon;
         TextView displayMessage;
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             displayMessage = itemView.findViewById(R.id.textViewNote);
             deleteIcon = itemView.findViewById(R.id.imageButton);
         }
+    }
+
+    public interface UpdateAdapter{
+        void updateAdapter(int index);
     }
 }

@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,9 +26,9 @@ import okhttp3.Response;
 
 
 public class AddNote extends AppCompatActivity {
-    TextView editTextNote;
-    String url = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/post";
-    static final int MAX_LENGTH = 1000;
+    private TextView editTextNote;
+    private String url = "http://ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/post";
+    private static final int MAX_LENGTH = 1000;
 
 
     @Override
@@ -66,7 +63,12 @@ public class AddNote extends AppCompatActivity {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
+                        AddNote.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AddNote.this, "Unable to add note", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                     @Override
@@ -87,6 +89,13 @@ public class AddNote extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }else{
+                            AddNote.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(AddNote.this, "Unable to add note", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 });

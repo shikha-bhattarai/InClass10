@@ -1,11 +1,9 @@
 package com.example.inclass10;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,25 +13,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DisplayNote extends AppCompatActivity {
     private static final String DISPLAY_NOTE_URL = "http:ec2-3-91-77-16.compute-1.amazonaws.com:3000/api/note/get";
 
-    String message;
-    TextView displaySingleMessage;
-    Button close;
-    String jsonMessage;
+    private String message;
+    private TextView displaySingleMessage;
+    private Button close;
+    private String jsonMessage;
 
 
     @Override
@@ -66,6 +60,12 @@ public class DisplayNote extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                DisplayNote.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DisplayNote.this, "Unable to display note", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 e.printStackTrace();
             }
 
@@ -87,6 +87,13 @@ public class DisplayNote extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }else{
+                    DisplayNote.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DisplayNote.this, "Unable to display note", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
