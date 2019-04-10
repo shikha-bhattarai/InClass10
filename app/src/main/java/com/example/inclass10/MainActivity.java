@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,20 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(email.getText().toString().trim().equals("")){
+                    email.setError("Please enter an email");
+                    return;
+                }
+
+                if( password.getText().toString().trim().equals("")){
+                    password.setError("Please enter a password");
+                    return;
+                }
+
+                if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString().trim()).matches()) {
+                    email.setError("Please enter a valid email");
+                    return;
+                }
 
                 OkHttpClient client = new OkHttpClient();
 
